@@ -6,6 +6,7 @@ import (
 
 	"github.com/GuilhermeFujita/nlw_notes_api/database/model"
 	"github.com/GuilhermeFujita/nlw_notes_api/dto"
+	"github.com/go-chi/render"
 )
 
 type (
@@ -36,12 +37,7 @@ func (h CreateNoteHandler) CreateNote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	if err := json.NewEncoder(w).Encode(note); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	render.Status(r, http.StatusCreated)
+	render.JSON(w, r, note)
 
 }

@@ -1,10 +1,10 @@
 package entrypoint
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/GuilhermeFujita/nlw_notes_api/database/model"
+	"github.com/go-chi/render"
 )
 
 type (
@@ -30,12 +30,6 @@ func (h GetNotesHandler) GetNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	if err := json.NewEncoder(w).Encode(notes); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	render.JSON(w, r, notes)
 
 }
