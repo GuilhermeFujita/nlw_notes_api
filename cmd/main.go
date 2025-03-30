@@ -23,14 +23,17 @@ func main() {
 	router.Use(middleware.Logger)
 
 	noteWriter := repository.NewNoteWriter(db)
-	noteUsecase := usecase.NewNoteUseCase(noteWriter)
-	noteHandler := entrypoint.NewNoteHandler(noteUsecase)
+	noteReader := repository.NewNoteReader(db)
+	noteUsecase := usecase.NewNoteUseCase(noteWriter, noteReader)
+	createNoteHandler := entrypoint.NewCreateNoteHandler(noteUsecase)
+	getNotesHandler := entrypoint.NewGetNotesHandler(noteUsecase)
 
 	router.Route("/notes", func(r chi.Router) {
 		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Pong"))
 		})
-		r.Post("/", noteHandler.CreateNote)
+		r.Get("/", getNotesHandler.GetNotes)
+		r.Post("/", createNoteHandler.CreateNote)
 	})
 
 	http.ListenAndServe(":9090", router)

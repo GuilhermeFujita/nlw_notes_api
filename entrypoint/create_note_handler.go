@@ -13,16 +13,16 @@ type (
 		CreateNote(note dto.NoteRequestDTO) (model.Note, error)
 	}
 
-	NoteHandler struct {
+	CreateNoteHandler struct {
 		creator NoteCreator
 	}
 )
 
-func NewNoteHandler(c NoteCreator) NoteHandler {
-	return NoteHandler{c}
+func NewCreateNoteHandler(c NoteCreator) CreateNoteHandler {
+	return CreateNoteHandler{c}
 }
 
-func (h NoteHandler) CreateNote(w http.ResponseWriter, r *http.Request) {
+func (h CreateNoteHandler) CreateNote(w http.ResponseWriter, r *http.Request) {
 	var p dto.NoteRequestDTO
 
 	if err := json.NewDecoder(r.Body).Decode(&p); err != nil {

@@ -8,18 +8,18 @@ import (
 )
 
 type (
-	NoteRepo struct {
+	NotesWriter struct {
 		db *gorm.DB
 	}
 )
 
-func NewNoteWriter(db *gorm.DB) NoteRepo {
-	return NoteRepo{db: db}
+func NewNoteWriter(db *gorm.DB) NotesWriter {
+	return NotesWriter{db: db}
 }
 
-func (r NoteRepo) SaveNote(note dto.NoteRequestDTO) (model.Note, error) {
+func (w NotesWriter) SaveNote(note dto.NoteRequestDTO) (model.Note, error) {
 	noteModel := mappers.ToNoteModel(note)
-	result := r.db.Create(&noteModel)
+	result := w.db.Create(&noteModel)
 	if result.Error != nil {
 		return model.Note{}, result.Error
 	}
