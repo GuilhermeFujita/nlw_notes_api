@@ -27,6 +27,7 @@ func main() {
 	noteUsecase := usecase.NewNoteUseCase(noteWriter, noteReader)
 	createNoteHandler := entrypoint.NewCreateNoteHandler(noteUsecase)
 	getNotesHandler := entrypoint.NewGetNotesHandler(noteUsecase)
+	deleteNotesHandler := entrypoint.NewDeleteNoteHandler(noteUsecase)
 
 	router.Route("/notes", func(r chi.Router) {
 		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +35,7 @@ func main() {
 		})
 		r.Get("/", getNotesHandler.GetNotes)
 		r.Post("/", createNoteHandler.CreateNote)
+		r.Delete("/{id}", deleteNotesHandler.DeleteNote)
 	})
 
 	http.ListenAndServe(":9090", router)

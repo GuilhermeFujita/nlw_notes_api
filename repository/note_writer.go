@@ -25,3 +25,7 @@ func (w NotesWriter) SaveNote(note dto.NoteRequestDTO) (model.Note, error) {
 	}
 	return noteModel, nil
 }
+
+func (w NotesWriter) DeleteNote(note model.Note) error {
+	return w.db.Delete(&note).Error
+}

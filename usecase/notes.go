@@ -6,31 +6,42 @@ import (
 )
 
 type (
-	NoteSaver interface {
+	NoteWriter interface {
 		SaveNote(note dto.NoteRequestDTO) (model.Note, error)
+		DeleteNote(note model.Note) error
 	}
 
 	NotesFinder interface {
 		GetNotes(searchedNote string) ([]model.Note, error)
+		GetNote(id int) (model.Note, error)
 	}
 
 	NoteUseCase struct {
-		saver  NoteSaver
+		writer NoteWriter
 		finder NotesFinder
 	}
 )
 
-func NewNoteUseCase(s NoteSaver, f NotesFinder) NoteUseCase {
+func NewNoteUseCase(w NoteWriter, f NotesFinder) NoteUseCase {
 	return NoteUseCase{
-		saver:  s,
+		writer: w,
 		finder: f,
 	}
 }
 
 func (u NoteUseCase) CreateNote(note dto.NoteRequestDTO) (model.Note, error) {
-	return u.saver.SaveNote(note)
+	return u.writer.SaveNote(note)
 }
 
 func (u NoteUseCase) GetNotes(searchedNote string) ([]model.Note, error) {
 	return u.finder.GetNotes(searchedNote)
+}
+
+func (u NoteUseCase) DeleteNote(noteID int) error {
+	noteToDelete, err := u.finder.GetNote(noteID)
+	if err != nil {
+		return err
+	}
+
+	return u.writer.DeleteNote(noteToDelete)
 }
