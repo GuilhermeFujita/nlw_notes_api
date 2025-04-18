@@ -25,7 +25,10 @@ func (r NotesReader) GetNotes(searchedNote string) ([]model.Note, error) {
 		query = query.Where("content ILIKE ?", fmt.Sprintf("%%%s%%", searchedNote))
 	}
 
-	err := query.Find(&notes).Error
+	err := query.
+		Order("note_date desc").
+		Find(&notes).Error
+		
 	return notes, err
 }
 
