@@ -32,6 +32,11 @@ func (h CreateNoteHandler) CreateNote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := p.Validate(); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	note, err := h.creator.CreateNote(p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
