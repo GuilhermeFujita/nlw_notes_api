@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/GuilhermeFujita/nlw_notes_api/database/model"
+	"github.com/GuilhermeFujita/nlw_notes_api/mappers"
 	"github.com/go-chi/render"
 )
 
@@ -30,6 +31,8 @@ func (h GetNotesHandler) GetNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, notes)
+	notesDTO := mappers.MapNotesToDTO(notes)
+
+	render.JSON(w, r, notesDTO)
 
 }

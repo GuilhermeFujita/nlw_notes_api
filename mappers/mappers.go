@@ -14,3 +14,17 @@ func ToNoteModel(note dto.NoteRequestDTO) model.Note {
 		NoteDate: &now,
 	}
 }
+
+func MapNotesToDTO(notes []model.Note) []dto.NoteResponseDTO {
+	notesResponse := make([]dto.NoteResponseDTO, 0, len(notes))
+
+	for _, note := range notes {
+		notesResponse = append(notesResponse, dto.NoteResponseDTO{
+			ID:       note.ID,
+			Content:  note.Content,
+			NoteDate: *note.NoteDate,
+		})
+	}
+
+	return notesResponse
+}

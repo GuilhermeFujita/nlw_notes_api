@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type Note struct {
 	ID        int64 `gorm:"primaryKey"`
