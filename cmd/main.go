@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/GuilhermeFujita/nlw_notes_api/cmd/modules"
+	"github.com/GuilhermeFujita/nlw_notes_api/config"
 	"github.com/go-chi/cors"
 	"go.uber.org/fx"
 )
@@ -19,7 +21,7 @@ func main() {
 	app.Run()
 }
 
-func StartServer(lc fx.Lifecycle, router http.Handler) {
+func StartServer(lc fx.Lifecycle, router http.Handler, config *config.Config) {
 	corsMiddleware := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
@@ -32,8 +34,8 @@ func StartServer(lc fx.Lifecycle, router http.Handler) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				log.Println("Server is starting at :9090")
-				http.ListenAndServe(":9090", handler)
+				log.Printf("Server is starting at :%d", config.ServerPort)
+				http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), handler)
 			}()
 			return nil
 		},

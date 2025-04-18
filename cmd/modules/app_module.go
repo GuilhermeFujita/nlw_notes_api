@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"github.com/GuilhermeFujita/nlw_notes_api/config"
 	"github.com/GuilhermeFujita/nlw_notes_api/database"
 	"github.com/GuilhermeFujita/nlw_notes_api/entrypoint"
 	"github.com/GuilhermeFujita/nlw_notes_api/repository"
@@ -12,6 +13,7 @@ import (
 var AppModule = fx.Options(
 	// Constructors
 	fx.Provide(
+		config.Load,
 		database.Connect,
 		repository.NewNoteWriter,
 		repository.NewNoteReader,
