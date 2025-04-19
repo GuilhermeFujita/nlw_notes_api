@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/GuilhermeFujita/nlw_notes_api/database/model"
 	"gorm.io/gorm"
@@ -22,13 +23,13 @@ func (r NotesReader) GetNotes(searchedNote string) ([]model.Note, error) {
 	query := r.db.Model(&model.Note{})
 
 	if searchedNote != "" {
-		query = query.Where("content ILIKE ?", fmt.Sprintf("%%%s%%", searchedNote))
+		query = query.Where("LOWER(content) LIKE ?", fmt.Sprintf("%%%s%%", strings.ToLower(searchedNote)))
 	}
 
 	err := query.
 		Order("note_date desc").
 		Find(&notes).Error
-		
+
 	return notes, err
 }
 
