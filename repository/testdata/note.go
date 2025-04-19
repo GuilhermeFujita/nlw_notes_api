@@ -48,3 +48,11 @@ func ExpectedSingleNote() model.Note {
 		NoteDate: time.Date(2025, time.October, 20, 15, 30, 0, 0, time.UTC),
 	}
 }
+
+func ExpectedNoteFoundToDelete() model.Note {
+	return model.Note{
+		ID:       1,
+		Content:  "Test Note 1",
+		NoteDate: time.Date(2025, time.April, 18, 10, 0, 0, 0, time.UTC),
+	}
+}
