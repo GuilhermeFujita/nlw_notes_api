@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/spf13/viper"
@@ -46,6 +48,10 @@ func Load() (*Config, error) {
 		DBName:     v.GetString("DB_NAME"),
 		ServerPort: v.GetInt("SERVER_PORT"),
 		Timeout:    timeout,
+	}
+
+	if strings.TrimSpace(cfg.DBHost) == "" || strings.TrimSpace(cfg.DBName) == "" {
+		return nil, fmt.Errorf("DB_HOST and DB_NAME are required")
 	}
 
 	return cfg, nil
