@@ -14,7 +14,6 @@ var AppModule = fx.Options(
 	// Constructors
 	fx.Provide(
 		config.Load,
-		database.Connect,
 		repository.NewNoteWriter,
 		repository.NewNoteReader,
 		usecase.NewNoteUseCase,
@@ -23,6 +22,8 @@ var AppModule = fx.Options(
 		entrypoint.NewDeleteNoteHandler,
 		router.NewRouter,
 	),
+
+	database.Module,
 
 	//UseCases
 	fx.Provide(
