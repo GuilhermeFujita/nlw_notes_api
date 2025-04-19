@@ -22,26 +22,28 @@ func main() {
 }
 
 func StartServer(lc fx.Lifecycle, router http.Handler, config *config.Config) {
-	corsMiddleware := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"Content-Type"},
-	})
-
-	// 2) envolva o seu router com o middleware de CORS
-	handler := corsMiddleware.Handler(router)
+	srv := &http.Server{
+		Addr: fmt.Sprintf(":%d", config.ServerPort),
+		Handler: cors.New(cors.Options{
+			AllowedOrigins: []string{"*"},
+			AllowedMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
+			AllowedHeaders: []string{"Content-Type"},
+		}).Handler(router),
+	}
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
+			log.Printf("Server is starting at %s", srv.Addr)
 			go func() {
-				log.Printf("Server is starting at :%d", config.ServerPort)
-				http.ListenAndServe(fmt.Sprintf(":%d", config.ServerPort), handler)
+				if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+					log.Fatalf("ListenAndServe error %v", err)
+				}
 			}()
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			log.Println("Server stopping...")
-			return nil
+			log.Println("Stopping server...")
+			return srv.Shutdown(ctx)
 		},
 	})
 }
